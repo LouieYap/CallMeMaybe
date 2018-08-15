@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:namespace="clr-namespace:CallMeMaybe.Services"
+            x:Class="CallMeMaybe.Views.ContactListPage"
+             x:Name="ContactListPage">
+    <!--Pages can be added as references or inline-->
+    <ContentPage Title="CONTACTS">
+        <ContentPage.Resources>
+            <namespace:FavoriteImageConverter x:Key="FavoriteImageConverter" />
+        </ContentPage.Resources>
+        <StackLayout>
+            <SearchBar x:Name="MainSearchBar" Placeholder="Search" Text="{Binding SearchBar}" HorizontalOptions="FillAndExpand">
+            </SearchBar>
+            <Label Text="{Binding ContactsSize, StringFormat='Contacts Displayed:  {0:F0}'}" FontSize="Small" BackgroundColor="#E6E6E6"></Label>
+            <ListView  x:Name="contactsListView" ItemsSource="{Binding Contacts}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{Binding Path=BindingContext.ContactImage, Source={x:Reference contactsListView}}" VerticalOptions="Center" Margin="15,0,0,0"></Image>
+                                <Label Text="{Binding FullName}" VerticalOptions="Center"></Label>
+                                <Image Source="{Binding Favorite, Converter={StaticResource FavoriteImageConverter}}" VerticalOptions="Center" HorizontalOptions="EndAndExpand">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding BindingContext.TapCommand, Source={x:Reference contactsListView}}" 
+                                            CommandParameter="{Binding FullName}"/>
+
+                                    </Image.GestureRecognizers>
+                                </Image>
+                                <Image Source="{Binding Path=BindingContext.PhoneImage, Source={x:Reference contactsListView}}" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,15,0">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding BindingContext.CallCommand, Source={x:Reference contactsListView}}" 
+                                            CommandParameter="{Binding ContactNumber}"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+
+                            </StackLayout>
+
+                            <ViewCell.ContextActions>
+                                <MenuItem  Text="Edit" IsDestructive="False" Command="{Binding Source={x:Reference contactsListView}, Path=BindingContext.EditCommand}" BindingContext="{Binding Source={x:Reference contactsListView}, Path=BindingContext.EditMenu}"/>
+                                <MenuItem  Text="Delete" IsDestructive="True" 
+                                           Command="{Binding Source={x:Reference contactsListView}, Path=BindingContext.DeleteCommand}" 
+                                           CommandParameter="{Binding FullName}"/>
+                            </ViewCell.ContextActions>
+
+
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Orientation="Horizontal" VerticalOptions="End">
+                <Button BackgroundColor="#4949FB" TextColor="White" Text="ADD CONTACTs" HorizontalOptions="FillAndExpand"></Button>
+            </StackLayout>
+           
+        </StackLayout>
+        
+    </ContentPage>
+
+    <ContentPage Title="DIALPAD" />
+</TabbedPage>
