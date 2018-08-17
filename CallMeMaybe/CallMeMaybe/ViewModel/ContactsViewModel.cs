@@ -1,5 +1,6 @@
 ﻿using Android.Telecom;
 using CallMeMaybe.Services;
+using CallMeMaybe.Views;
 using Contacts.Model;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ namespace CallMeMaybe.ViewModel
     {
 
         private ObservableCollection<Contact> _contacts;
+
+        public INavigation Navigation { get; internal set; }
+
         public ObservableCollection<Contact> Contacts
         {
             get { return _contacts; }
@@ -32,12 +36,17 @@ namespace CallMeMaybe.ViewModel
         private string _phoneImage;
         private string _deleteMenu;
         private string _searchBar;
-        private string _contactsSize;
+        private string _phoneEntry;
 
         public ICommand DeleteCommand => new Command(OnDelete);
+        public ICommand AddCommand => new Command(OnAdd);
+        public ICommand EditCommand => new Command(OnEdit);
         public ICommand SearchBarCommand => new Command(OnSearch);
         public ICommand TapCommand => new Command(OnTapped);
+        public ICommand TapCommand1 => new Command(OnPhoneTapped);
         public ICommand CallCommand => new Command(OnCall);
+        public ICommand OnCallTappedCommand => new Command(OnCallTapped);
+        public ICommand DeleteEntryCommand => new Command(OnDeleteEntry);
         public string ContactImage
         {
             get => _contactImage; set
@@ -69,7 +78,7 @@ namespace CallMeMaybe.ViewModel
         {
             OriginalContacts = new ObservableCollection<Contact>(contactsParam);
             Contacts = Utility.ArrangeContacts(new ObservableCollection<Contact>(contactsParam));      
-            updateContactsSize();
+            //updateContactsSize();
             ContactImage = "baseline_account_circle_black_24.png";
             FavoriteImage = "baseline_favorite_border_black_24.png";
             PhoneImage = "baseline_phone_black_24.png";
@@ -94,15 +103,14 @@ namespace CallMeMaybe.ViewModel
             }
         }
 
-        public string ContactsSize
+        public string PhoneEntry
         {
-            get => _contactsSize; set
+            get => _phoneEntry; set
             {
-                _contactsSize = value;
-                OnPropertyChanged("ContactsSize");
+                _phoneEntry = value;
+                OnPropertyChanged("PhoneEntry");
             }
         }
-
 
 
         private void OnSearch()
@@ -125,8 +133,9 @@ namespace CallMeMaybe.ViewModel
                       _contacts.Add(c);                    
                 }
             }
-            updateContactsSize();
         }
+
+
 
         private void OnDelete(object s)
         {
@@ -139,20 +148,60 @@ namespace CallMeMaybe.ViewModel
                 }
             }
             Contacts = Utility.ArrangeContacts(Contacts);
-            updateContactsSize();
         }
 
+        private void OnAdd()
+        {
+            Contact contact = new Contact();
+            Navigation.PushAsync(new ContactPage(contact, Contacts, "Add Contact"));
+        }
+        private void OnEdit(object s)
+        {
+            Contact contact = s as Contact;
+            Navigation.PushAsync(new ContactPage(contact, Contacts, "Edit Contact"));
+        }
+           
         private void OnTapped(object s)
         {
-           foreach (Contact c in Contacts)
+
+            int count = 0;
+            foreach (Contact c in Contacts)
             {
-                if(c.FullName.Equals(s))
+                if (c.Favorite == true) {
+                    count++;
+                }
+                    
+              
+                if (count < 10)
                 {
-                     c.Favorite = c.Favorite? false:true;
-                     break;
-                }             
+                    if (c.FullName.Equals(s))
+                    {
+                        c.Favorite = c.Favorite ? false : true;
+                        break;
+                    }
+                }
+                        
             }
             Contacts = Utility.ArrangeContacts(Contacts);
+        }
+
+        private void OnPhoneTapped(object s)
+        {
+            if (String.IsNullOrEmpty(PhoneEntry))
+            {
+                PhoneEntry = Convert.ToString(s);
+            } else
+            {
+                PhoneEntry = PhoneEntry + "" + Convert.ToString(s);
+            }
+        }
+
+        private void OnDeleteEntry(object s)
+        {
+            if (!String.IsNullOrEmpty(PhoneEntry))
+            {
+                PhoneEntry = PhoneEntry.Remove(PhoneEntry.Length - 1);
+            }
         }
 
         private void OnCall(object s)
@@ -160,11 +209,11 @@ namespace CallMeMaybe.ViewModel
             DependencyService.Get<ICallService>().MakePhoneCall(Convert.ToString(s));
         }
 
-        private void updateContactsSize()
+        private void OnCallTapped(object s)
         {
-            ContactsSize = Convert.ToString(_contacts.Count);
+            DependencyService.Get<ICallService>().MakePhoneCall(PhoneEntry);
         }
-
+   
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName = null)
         {

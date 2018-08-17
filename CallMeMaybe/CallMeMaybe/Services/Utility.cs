@@ -26,7 +26,15 @@ namespace CallMeMaybe.Services
 
         public static ObservableCollection<Contact> ArrangeContacts(ObservableCollection<Contact> contacts)
         {
-            return new ObservableCollection<Contact>(contacts.OrderBy(c => c.FullName).OrderByDescending(c => c.Favorite));
+
+            List<Contact> _contacts = contacts.OrderBy(c => c.FullName).OrderByDescending(c => c.Favorite).ToList();
+            contacts.Clear();
+            foreach (Contact c in _contacts)
+            {
+                contacts.Add(c);
+            }
+
+            return contacts;
         }
 
 

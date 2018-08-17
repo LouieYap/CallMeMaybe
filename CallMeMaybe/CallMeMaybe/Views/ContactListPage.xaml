@@ -12,7 +12,7 @@
         <StackLayout>
             <SearchBar x:Name="MainSearchBar" Placeholder="Search" Text="{Binding SearchBar}" HorizontalOptions="FillAndExpand">
             </SearchBar>
-            <Label Text="{Binding ContactsSize, StringFormat='Contacts Displayed:  {0:F0}'}" FontSize="Small" BackgroundColor="#E6E6E6"></Label>
+            <Label Text="{Binding Contacts.Count, StringFormat='Contacts Displayed:  {0:F0}'}" FontSize="Small" BackgroundColor="#E6E6E6"></Label>
             <ListView  x:Name="contactsListView" ItemsSource="{Binding Contacts}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -40,7 +40,9 @@
                             </StackLayout>
 
                             <ViewCell.ContextActions>
-                                <MenuItem  Text="Edit" IsDestructive="False" Command="{Binding Source={x:Reference contactsListView}, Path=BindingContext.EditCommand}" BindingContext="{Binding Source={x:Reference contactsListView}, Path=BindingContext.EditMenu}"/>
+                                <MenuItem  Text="Edit" IsDestructive="False" 
+                                           Command="{Binding Source={x:Reference contactsListView}, Path=BindingContext.EditCommand}"
+                                           CommandParameter="{Binding .}"/>
                                 <MenuItem  Text="Delete" IsDestructive="True" 
                                            Command="{Binding Source={x:Reference contactsListView}, Path=BindingContext.DeleteCommand}" 
                                            CommandParameter="{Binding FullName}"/>
@@ -52,12 +54,80 @@
                 </ListView.ItemTemplate>
             </ListView>
             <StackLayout Orientation="Horizontal" VerticalOptions="End">
-                <Button BackgroundColor="#4949FB" TextColor="White" Text="ADD CONTACTs" HorizontalOptions="FillAndExpand"></Button>
+                <Button BackgroundColor="#4949FB" TextColor="White" Text="ADD CONTACT" Command="{Binding Source={x:Reference contactsListView}, Path=BindingContext.AddCommand}" HorizontalOptions="FillAndExpand"></Button>
             </StackLayout>
-           
+
         </StackLayout>
+
+    </ContentPage>
+    <ContentPage Title="DIALPAD" BackgroundColor="White">
+        <ContentPage.Resources>
+            <ResourceDictionary>
+
+                <Style x:Key="PhoneKeys" TargetType="Button">
+                    <Setter Property="BackgroundColor" Value="White"/>
+                    <Setter Property="FontSize" Value="36"/>
+                    <Setter Property="Command" Value="{Binding Source={x:Reference contactsListView}, Path=BindingContext.TapCommand1}"/>
+                </Style>
+          
+            </ResourceDictionary>
+        </ContentPage.Resources>
+        <StackLayout>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                
+                <Grid Grid.ColumnSpan="3" BackgroundColor="#E6E6E6">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Entry Margin="20,0,0,0" Text="{Binding PhoneEntry}" VerticalOptions="Center" FontSize="42"  MaxLength="16" TextColor="White" Grid.Row="0" Grid.Column="0" Keyboard="Numeric"/>
+                    <Image Margin="0,0,30,0" Source="baseline_backspace_white_24.png" HorizontalOptions="End" Grid.Row="0" Grid.Column="1">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer
+                                            Command="{Binding BindingContext.DeleteEntryCommand, Source={x:Reference contactsListView}}"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Grid>
+                                
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="1" Text="1" Grid.Row="1" Grid.Column="0" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="2" Text="2" Grid.Row="1" Grid.Column="1" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="3" Text="3" Grid.Row="1" Grid.Column="2" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="4" Text="4" Grid.Row="2" Grid.Column="0" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="5" Text="5" Grid.Row="2" Grid.Column="1" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="6" Text="6" Grid.Row="2" Grid.Column="2" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="7" Text="7" Grid.Row="3" Grid.Column="0" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="8" Text="8" Grid.Row="3" Grid.Column="1" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="9" Text="9" Grid.Row="3" Grid.Column="2" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="*" Text="*" Grid.Row="4" Grid.Column="0" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="0" Text="0" Grid.Row="4" Grid.Column="1" />
+                <Button Style="{StaticResource PhoneKeys}" CommandParameter="#" Text="#" Grid.Row="4" Grid.Column="2" />
+
+            </Grid>
+            <Button HorizontalOptions="CenterAndExpand" Margin="0,15" BackgroundColor="#3CB716" WidthRequest="150" HeightRequest="55" TextColor="White" Text="Call" FontSize="24" Command="{Binding BindingContext.OnCallTappedCommand, Source={x:Reference contactsListView}}"/>
+         
+         
+        </StackLayout>
+     
+     
         
     </ContentPage>
-
-    <ContentPage Title="DIALPAD" />
 </TabbedPage>

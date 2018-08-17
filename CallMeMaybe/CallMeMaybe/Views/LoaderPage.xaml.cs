@@ -39,7 +39,7 @@ namespace Contacts.Views
             {
                 proceed.IsVisible = false;
                 //Save Model
-                var page = new ContactListPage(_contacts);
+                var page = new NavigationPage(new ContactListPage(_contacts));
                 await Navigation.PushModalAsync(page);
             } else
             {

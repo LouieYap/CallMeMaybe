@@ -19,9 +19,13 @@ namespace CallMeMaybe.Views
         public ContactListPage (List<Contact> _contacts)
         {
             vm = new ContactsViewModel(_contacts);
+            vm.Navigation = Navigation;
             BindingContext = vm;
             InitializeComponent();
-           
+         
+
         }
+
+
     }
 }
