@@ -20,7 +20,7 @@ namespace CallMeMaybe.Views
             ContactViewModel cvm = new ContactViewModel(contact, cs, title, index);
             BindingContext = cvm;
             cvm.Navigation = Navigation;
-            InitializeComponent ();
+            InitializeComponent();
            
         }
 	}

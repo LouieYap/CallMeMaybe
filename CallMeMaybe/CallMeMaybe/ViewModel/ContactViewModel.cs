@@ -15,14 +15,15 @@ namespace CallMeMaybe.ViewModel
 
 
 
-    public class ContactViewModel :  INotifyPropertyChanged
+    public class ContactViewModel : INotifyPropertyChanged
     {
 
         public INavigation Navigation { get; internal set; }
         private ObservableCollection<Contact> _contacts;
         private Contact _contact;
         private string _title;
-        private int _index = -1;
+        private string _buttonText;
+        private int _index;
 
         public ICommand SaveCommand => new Command(OnSave);
 
@@ -44,30 +45,50 @@ namespace CallMeMaybe.ViewModel
             }
         }
 
+        public string ButtonText
+        {
+            get => _buttonText; set
+            {
+                _buttonText = value;
+                OnPropertyChanged("ButtonText");
+            }
+        }
+
+
         public ContactViewModel(Contact c, ObservableCollection<Contact> Contacts, String title, int index)
         {
-         
+
             Contact = c;
             Title = title;
             _contacts = Contacts;
             _index = index;
+            _buttonText = title == "Add Contact" ? "Save" : "Update";
 
         }
 
         public async void OnSave()
         {
-            if (_index >= 0)
+            if (String.IsNullOrWhiteSpace(_contact.FirstName) || String.IsNullOrWhiteSpace(_contact.LastName) || String.IsNullOrWhiteSpace(_contact.ContactNumber))
             {
-                Contact c = _contacts[_index];
-                c.FirstName = _contact.FirstName;
-                c.LastName = _contact.LastName;
-                c.ContactNumber = _contact.ContactNumber;
+                await App.Current.MainPage.DisplayAlert("Validation Error", "Please complete the contact details form", "OK");
             } else
             {
-                _contacts.Add(Contact);
+                if (_index >= 0)
+                {
+                    Contact c = _contacts[_index];
+                    c.FirstName = _contact.FirstName;
+                    c.LastName = _contact.LastName;
+                    c.ContactNumber = _contact.ContactNumber;
+                }
+                else
+                {
+                    _contacts.Add(_contact);
+                }
+                _contacts = Utility.ArrangeContacts(_contacts);
+                await Navigation.PopAsync();
             }
-            _contacts = Utility.ArrangeContacts(_contacts);
-            await Navigation.PopAsync();
+
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

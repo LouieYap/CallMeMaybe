@@ -99,7 +99,7 @@
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Entry Margin="20,0,0,0" Text="{Binding PhoneEntry}" VerticalOptions="Center" FontSize="42"  MaxLength="16" TextColor="White" Grid.Row="0" Grid.Column="0" Keyboard="Numeric"/>
+                    <Entry Margin="20,0,0,0" Text="{Binding PhoneEntry}" VerticalOptions="Center" FontSize="42"  MaxLength="16" TextColor="Black" Grid.Row="0" Grid.Column="0" Keyboard="Numeric"/>
                     <Image Margin="0,0,30,0" Source="baseline_backspace_white_24.png" HorizontalOptions="End" Grid.Row="0" Grid.Column="1">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer

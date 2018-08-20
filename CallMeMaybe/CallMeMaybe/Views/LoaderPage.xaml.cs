@@ -38,7 +38,6 @@ namespace Contacts.Views
             if (_contacts != null && _contacts.Count > 0)
             {
                 proceed.IsVisible = false;
-                //Save Model
                 var page = new NavigationPage(new ContactListPage(_contacts));
                 await Navigation.PushModalAsync(page);
             } else
@@ -51,7 +50,7 @@ namespace Contacts.Views
 
         private async void OnProceed(object sender, EventArgs e)
         {
-            var page = new ContactListPage(new List<Contact>());
+            var page = new NavigationPage(new ContactListPage(new List<Contact>()));
             await Navigation.PushModalAsync(page);
         }
 	}

@@ -170,8 +170,10 @@ namespace CallMeMaybe.ViewModel
                 if (c.Favorite == true) {
                     count++;
                 }
-                    
-              
+            }
+
+            foreach (Contact c in Contacts)
+            {
                 if (count < 10)
                 {
                     if (c.FullName.Equals(s))
@@ -180,8 +182,17 @@ namespace CallMeMaybe.ViewModel
                         break;
                     }
                 }
-                        
+                else
+                {
+                    if (c.FullName.Equals(s))
+                    {
+                        c.Favorite = false;
+                        break;
+                    }
+                   
+                }
             }
+
             Contacts = Utility.ArrangeContacts(Contacts);
         }
 

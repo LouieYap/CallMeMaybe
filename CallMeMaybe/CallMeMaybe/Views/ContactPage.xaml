@@ -8,8 +8,8 @@
             <Image Source="baseline_account_circle_black_48.png" WidthRequest="250" HeightRequest="250"></Image>
             <Entry Margin="10,10,10,0" Placeholder="First Name" Text="{Binding Contact.FirstName}"></Entry>
             <Entry Margin="10,0,10,0" Placeholder="Last Name" Text="{Binding Contact.LastName}"></Entry>
-            <Entry Margin="10,0,10,20" Placeholder="Contact Number" Text="{Binding Contact.ContactNumber}"></Entry>
-            <Button Text="SAVE" FontSize="Large" TextColor="White" Command="{Binding SaveCommand}" HorizontalOptions="Center" BackgroundColor="#4949FB" HeightRequest="45" WidthRequest="300"></Button>
+            <Entry Margin="10,0,10,20" Placeholder="Contact Number" Keyboard="Numeric" Text="{Binding Contact.ContactNumber}"></Entry>
+            <Button Text="{Binding ButtonText}" FontSize="Large" TextColor="White" Command="{Binding SaveCommand}" HorizontalOptions="Center" BackgroundColor="#4949FB" HeightRequest="45" WidthRequest="300"></Button>
 
 
         </StackLayout>
